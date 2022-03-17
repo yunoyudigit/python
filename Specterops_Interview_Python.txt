@@ -1,0 +1,77 @@
+######################################
+# Description: Password Mask Checker #
+#                                    #
+# Author: Jake Gilane                #
+#                                    #
+# Synopsis:                          #
+# Takes a list of user passwords,    #
+# converts to a mask, then counts    #
+# the total number of each unique    #
+# occurance and outputs the top 3    #
+# most common masks.                 #
+######################################
+
+from collections import Counter
+
+
+# function to split a password into individual characters
+def split(word):
+    return [char for char in word]
+
+
+# function to convert a split pass char by char to its mask
+def converter(password):
+    broken_password = split(password)
+    converted_splitword = []
+    new_password = ""
+
+    for i in range(0, len(password)):
+        if broken_password[i].isupper():
+            converted_splitword.append("?l")
+        
+        elif broken_password[i].islower():
+            converted_splitword.append("?u")
+
+        elif broken_password[i].isnumeric():
+            converted_splitword.append("?d")
+
+        else:
+           converted_splitword.append("?s")
+
+    return (new_password.join(converted_splitword))
+
+
+# main program
+def main():
+
+    # Your processing logic here
+    # reading from file
+    filepass = open(r'C:\Users\yunoy\OneDrive\Desktop\pass.txt','r')
+    Lines = []
+    Lines = filepass.readlines()
+
+    # stripping newline character from each password
+    strippedlist = []
+    for line in Lines:
+        strippedlist.append(line.strip())
+
+    # converting password to a mask
+    convertedlines = []
+    for stripped in strippedlist:
+        convertedlines.append(converter(stripped))
+    
+    # counting each unique mask occurance and outputting top 3 occurences with count
+    c = Counter(convertedlines)
+    b = c.most_common(3)
+
+    # printing final output with appropriate formatting
+    print ("Top 3 Password Masks:")
+    print("--------------------")
+    cnt = 1
+    for z in b:
+       sep = str(z).split(' ')
+       print(*(str(cnt) + '.', "{:<17}".format(str(sep[0]).replace("('","").replace("',", "") + ":"), "{:>11}".format(str(sep[1]).replace(")", ""))))
+       cnt = cnt + 1
+
+    
+main()
